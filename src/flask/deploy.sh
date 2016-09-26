@@ -9,7 +9,9 @@ fi
 
 docker stop flaskapp
 docker rm flaskapp
-docker run --name flaskapp --restart=always \
+docker run --name flaskapp \
     -p 80:80 \
     -v $1:/app \
-    -d jazzdd/alpine-flask
+    -t flask > /dev/null &
+
+#docker exec --privileged flask /bin/sh -c 'nginx && uwsgi --ini /app.ini'
