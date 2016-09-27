@@ -17,7 +17,7 @@ def ping():
         count = 0
         for m in re.findall (regex, out):
             count = count + 1
-            res += int(m)
+            res += ixent(m)
         return out + '<br/>moy = '+ str(res / count) + 'ms'
     except:
         return 'ERROR: Timeout...'
