@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, request, render_template, jsonify
 import subprocess
-import re
+import re, sys
 
 app = Flask(__name__)
 
@@ -17,34 +17,17 @@ def build_row(content, height):
     return '<div class="row" style="height: ' + str(height) + '%">'+ content + '</div>'
 
 def build_well(content):
-    return '<div class="well">' + content + '</div>'
-
-def build_html(content):
-    return '''<!DOCTYPE html>
-                <html lang="en">
-                <head>
-                  <meta charset="utf-8">
-                  <meta name="viewport"
-                     content="width=device-width, initial-scale=1, user-scalable=yes">
-                  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-                  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-                  <style>
-                    html,body{height:100%;}
-
-                    .container-fluid {
-                        height:100%;
-                        background-color: black;
-                    }
-                  </style>
-                </head>
-                <body>''' + content + '</body></html>'
+    return '<div class="well" style="height: 90%">' + content + '</div>'
 
 @app.route('/')
 def hello_world():
     well = build_well("Hello World")
     well_2x2 = build_2x2_grid(well, well, well, well)
-    well_4x4 = build_2x2_grid(well_2x2, well_2x2, well_2x2, well_2x2)
-    return build_html(well_4x4)
+    well_4x4 = build_2x2_grid(build_well('<span id="ping">' + ping() + '</span>'), well_2x2, well_2x2, well_2x2)
+
+    ping_module = {'interval': '1000', 'function': 'ping_func', 'url': '/ping', 'id': 'ping'}
+
+    return render_template("main.html", content=well_4x4, modules=[ping_module])
 
 @app.route('/ping')
 def ping():
@@ -55,10 +38,10 @@ def ping():
         count = 0
         for m in re.findall (regex, out):
             count = count + 1
-            res += ixent(m)
+            res += int(m)
         return out + '<br/>moy = '+ str(res / count) + 'ms'
-    except:
-        return 'ERROR: Timeout...'
+    except Exception, e:
+        return "Unexpected error:" + str(e)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True, threaded=True)

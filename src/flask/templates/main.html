@@ -1,0 +1,32 @@
+{% extends "template.html" %}
+{% block header %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+  <link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css"/>
+  <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="static/jquery/jquery.min.js"></script>
+  <script type="text/javascript"> var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}</script>
+  <style>
+        html,body{height:100%;}
+
+    .container-fluid {
+      height:100%;
+      background-color: grey;
+    }
+  </style>
+</head>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  {% for module in modules %}
+    setInterval({{ module.function }}, {{ module.interval }});
+    function {{ module.function }}() {
+      $.get($SCRIPT_ROOT + "{{ module.url }}", function(data){
+        document.getElementById("{{ module.id }}").innerHTML = data
+      });
+    }
+  {% endfor %}
+</script>
+{% endblock %}
