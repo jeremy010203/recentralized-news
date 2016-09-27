@@ -90,3 +90,6 @@ ENV/
 
 # VIM swap files
 *.sw*
+
+# Mac
+.DS_Store
