@@ -1,0 +1,6 @@
+infos:
+  - name: "koncentrator"
+  - version: "v0.1"
+settings:
+  port:
+  - listen: 5555
