@@ -1,11 +1,14 @@
 from flask import jsonify, Blueprint
+import app
 
 api = Blueprint('api', __name__)
 
 @api.route('/info/list/module')
 def list_module():
     dict = {}
-    dict['test'] = '657e4'
+    modules = app.get_modules()
+    for module in modules:
+        dict[module] = modules[module].module_name
     return jsonify(dict)
 
 @api.route('/info/koncentrator')
@@ -15,7 +18,8 @@ def info_koncentrator():
 
 @api.route('/module/<string:module_id>/content')
 def get_content(module_id):
-    if module_id == '657e4':
-        return '<html>Hello World from module</html>'
+    module = app.get_module(module_id)
+    if module is not None:
+        return module.module_name
     else:
-        return '<html>Error! Module not found</html>', 404
+        return "<html>No module found</html>"
