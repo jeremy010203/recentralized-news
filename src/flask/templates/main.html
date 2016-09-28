@@ -24,7 +24,11 @@
     setInterval({{ module.function }}, {{ module.interval }});
     function {{ module.function }}() {
       $.get($SCRIPT_ROOT + "{{ module.url }}", function(data){
-        document.getElementById("{{ module.id }}").innerHTML = data
+        var x = document.getElementsByName("{{ module.id }}")
+        var i;
+        for (i = 0; i < x.length; i++) {
+            x[i].innerHTML = data;
+        }
       });
     }
   {% endfor %}
