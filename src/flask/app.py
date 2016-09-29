@@ -20,8 +20,8 @@ def build_row(content, height):
 def build_well(content):
     return '<div class="well" style="height: 90%">' + content + '</div>'
 
-@app.route('/')
-def main():
+@app.route('/test')
+def test():
     well = build_well('<span name="random">' + get_random() + '</span>')
     well_2x2 = build_2x2_grid(well, well, well, well)
     well_4x4 = build_2x2_grid(build_well('<span name="ping">' + ping() + '</span>'), well_2x2, well_2x2, well_2x2)
@@ -29,6 +29,10 @@ def main():
     ping_module = {'interval': '1000', 'function': 'ping_func', 'url': '/ping', 'id': 'ping'}
     random_module = {'interval': '1000', 'function': 'random_func', 'url': '/random', 'id': 'random'}
 
+    return render_template("main.html", content=well_4x4, modules=[ping_module, random_module])
+
+@app.route('/')
+def main():
     return render_template("main.html", content=well_4x4, modules=[ping_module, random_module])
 
 @app.route('/hello_world')
