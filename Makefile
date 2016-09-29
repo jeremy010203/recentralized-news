@@ -5,7 +5,7 @@ build:
 
 deploy:
 	./src/flask/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/flask))
-	./src/flask/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator))
+	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator))
 
 stop:
 	docker stop flaskapp

@@ -7,9 +7,9 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-docker stop flaskapp
-docker rm flaskapp
-docker run --name flaskapp \
+sudo docker stop flaskapp
+sudo docker rm flaskapp
+sudo docker run --name flaskapp \
     -d \
     -p 80:80 \
     -v $1:/app \

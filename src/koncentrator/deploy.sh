@@ -7,11 +7,11 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-docker stop koncentrator
-docker rm koncentrator
-docker run --name koncentrator \
+sudo docker stop koncentrator
+sudo docker rm koncentrator
+sudo docker run --name koncentrator \
     -d \
-    -p 80:80 \
+    -p 81:80 \
     -v $1:/app \
     -t flask
 
