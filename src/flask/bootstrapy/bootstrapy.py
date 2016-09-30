@@ -5,10 +5,13 @@ def build_container(content):
     return '<div class="container-fluid">' + content + '</div>'
 
 def build_col_md(content, nb, height):
-    return '<div class="col-md-' + str(nb) + '" style="height: ' + str(height) + '%">'+ content + '</div>'
+    return '<div class="col-md-' + str(nb) + '" style="height: ' + str(height) + '%; padding: 0 !important;margin: 0 !important;">'+ content + '</div>'
 
 def build_row(content, height):
     return '<div class="row" style="height: ' + str(height) + '%">'+ content + '</div>'
 
+def build_border(content):
+    return '<div style="height: 100%; width: 100%; border: 1px solid black;">' + content + '</div>'
+
 def build_well(content):
-    return '<div class="well" style="height: 90%">' + content + '</div>'
+    return '<div class="well" style="height: 100%; width: 100%;">' + content + '</div>'
