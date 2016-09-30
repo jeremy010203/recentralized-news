@@ -14,7 +14,7 @@ def hello_world():
     return "<html>Hello World!</html>"
 
 if __name__ == "__main__":
-    settings = Settings("config.yml")
+    settings = reader.Settings("config.yml")
     if "port" in settings.get_content():
         port = settings.get_content().port
     else:
