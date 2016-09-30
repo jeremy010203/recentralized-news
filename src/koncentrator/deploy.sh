@@ -7,11 +7,10 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-sudo docker stop flaskapp
-sudo docker rm flaskapp
-sudo docker run --network=$2 --name flaskapp \
+sudo docker stop koncentrator
+sudo docker rm koncentrator
+sudo docker run --network=$2 --name koncentrator \
     -d \
-    -p 80:80 \
     -v $1:/app \
     -t flask
 
