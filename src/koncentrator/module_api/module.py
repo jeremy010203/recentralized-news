@@ -1,5 +1,6 @@
 from flask import request, jsonify, Blueprint, current_app
 from utils import utils
+import requests
 
 api = Blueprint('module', __name__)
 
@@ -24,3 +25,6 @@ class Module:
         self.module_id = str(module_id)
         module_id += 1
         self.module_name = name
+
+    def get_content(self):
+        return requests.get("http://{0}:{1}/content".format(self.module_name, "80")).text
