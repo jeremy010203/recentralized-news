@@ -10,9 +10,9 @@ fi
 sudo docker stop koncentrator
 sudo docker rm koncentrator
 sudo docker run --name koncentrator \
-    -d \
     -p 81:80 \
     -v $1:/app \
     -t flask
+    -i /bin/sh
 
 #docker exec --privileged flask /bin/sh -c 'nginx && uwsgi --ini /app.ini'
