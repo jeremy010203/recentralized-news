@@ -23,7 +23,7 @@
   {% for module in modules %}
     setInterval({{ module.function }}, {{ module.interval }});
     function {{ module.function }}() {
-      $.get($SCRIPT_ROOT + "{{ module.url }}", function(data){
+      $.get($SCRIPT_ROOT + "/get_from_module/{{ module.url }}", function(data){
         var x = document.getElementsByName("{{ module.id }}")
         var i;
         for (i = 0; i < x.length; i++) {

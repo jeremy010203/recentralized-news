@@ -24,26 +24,21 @@ def build_well(content):
 
 @app.route('/test')
 def test():
-    well = build_well('<span name="random">' + get_random() + '</span>')
+    well = build_well('<span name="hw"></span>')
     well_2x2 = build_2x2_grid(well, well, well, well)
-    well_4x4 = build_2x2_grid(build_well('<span name="ping">' + ping() + '</span>'), well_2x2, well_2x2, well_2x2)
 
-    ping_module = {'interval': '1000', 'function': 'ping_func', 'url': '/ping', 'id': 'ping'}
-    random_module = {'interval': '1000', 'function': 'random_func', 'url': '/random', 'id': 'random'}
+    hello_world_module = {'interval': '1000', 'function': 'hello_func', 'url': 'hello-world', 'id': 'hw'}
 
-    return render_template("main.html", content=well_4x4, modules=[ping_module, random_module])
+    return render_template("main.html", content=well_2x2, modules=[ping_module, hello_world_module])
+
+@app.route('/get_from_module/<module>')
+def get_from_module(module):
+    out = subprocess.check_output(["curl", 'koncentrator:80/' + module]).decode('utf-8')
+    return out
 
 @app.route('/')
 def main():
     return render_template("main.html", content=well_4x4, modules=[ping_module, random_module])
-
-@app.route('/hello_world')
-def hello_world():
-    return "Hello world"
-
-@app.route('/random')
-def get_random():
-    return str(random())
 
 @app.route('/ping')
 def ping():

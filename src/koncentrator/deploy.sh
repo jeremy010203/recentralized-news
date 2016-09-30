@@ -2,14 +2,14 @@
 
 # Arg: name of the file
 
-if [ $# -ne 1 ]; then
-    echo "Usage: <path/to/app>"
+if [ $# -ne 2 ]; then
+    echo "Usage: <path/to/app> <network>"
     exit 1
 fi
 
 sudo docker stop koncentrator
 sudo docker rm koncentrator
-sudo docker run --name koncentrator \
+sudo docker run --network=$2 --name koncentrator \
     -p 81:80 \
     -v $1:/app \
     -t flask

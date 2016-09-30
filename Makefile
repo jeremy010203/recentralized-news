@@ -1,11 +1,15 @@
+NETWORK=my_network
+
 all: deploy
 
 build:
 	docker build -t flask src/docker_images/alpine-flask/
 
 deploy:
-	./src/flask/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/flask))
-	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator))
+	docker network rm $(NETWORK)
+	docker network create --driver bridge $(NETWORK)
+	./src/flask/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/flask)) $(NETWORK)
+	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator)) $(NETWORK)
 
 stop:
 	docker stop flaskapp

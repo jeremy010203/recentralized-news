@@ -2,14 +2,14 @@
 
 # Arg: name of the file
 
-if [ $# -ne 1 ]; then
-    echo "Usage: <path/to/app>"
+if [ $# -ne 2 ]; then
+    echo "Usage: <path/to/app> <network>"
     exit 1
 fi
 
 sudo docker stop flaskapp
 sudo docker rm flaskapp
-sudo docker run --name flaskapp \
+sudo docker run --network=$2 --name flaskapp \
     -d \
     -p 80:80 \
     -v $1:/app \
