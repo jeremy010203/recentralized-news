@@ -3,7 +3,7 @@ NETWORK=my_network
 all: deploy
 
 build:
-	docker build -t flask src/docker_images/alpine-flask/
+	sudo docker build -t flask src/docker_images/alpine-flask/
 
 deploy:
 	sudo docker network rm $(NETWORK)
@@ -12,7 +12,7 @@ deploy:
 	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator)) $(NETWORK)
 
 stop:
-	sudo docker stop flaskapp
+	sudo docker stop flaskappf
 	sudo docker stop koncentrator
 
 rm: stop
