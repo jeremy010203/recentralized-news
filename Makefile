@@ -6,18 +6,18 @@ build:
 	docker build -t flask src/docker_images/alpine-flask/
 
 deploy:
-	docker network rm $(NETWORK)
-	docker network create --driver bridge $(NETWORK)
+	sudo docker network rm $(NETWORK)
+	sudo docker network create --driver bridge $(NETWORK)
 	./src/flask/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/flask)) $(NETWORK)
 	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator)) $(NETWORK)
 
 stop:
-	docker stop flaskapp
-	docker stop koncentrator
+	sudo docker stop flaskapp
+	sudo docker stop koncentrator
 
 rm: stop
-	docker rm flaskapp
-	docker rm koncentrator
+	sudo docker rm flaskapp
+	sudo docker rm koncentrator
 
 clean:
 	rm -rf *~ *#
