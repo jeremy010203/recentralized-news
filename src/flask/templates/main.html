@@ -27,16 +27,53 @@
   {% for module in modules %}
     setInterval({{ module.function }}, {{ module.interval }});
     function {{ module.function }}() {
-      $.get($SCRIPT_ROOT + "/get_from_module/{{ module.url }}", function(data){
-        var x = document.getElementsByName("{{ module.id }}")
-        var i;
-        for (i = 0; i < x.length; i++) {
-            x[i].innerHTML = data;
-            setTimeout(change_background.bind(null, x[i], x[i].style.backgroundColor), 200);
-            x[i].style.backgroundColor = 'blue';
+
+      $.ajax({
+        xhr: function()
+        {
+          var xhr = new window.XMLHttpRequest();
+          //Upload progress
+          xhr.upload.addEventListener("progress", function(evt){
+            if (evt.lengthComputable) {
+              var percentComplete = evt.loaded / evt.total;
+              //Do something with upload progress
+              var x = document.getElementsByName("{{ module.id }}")
+              for (i = 0; i < x.length; i++) {
+                  x[i].innerHTML = percentComplete;
+              }
+              console.log(percentComplete);
+            }
+          }, false);
+          //Download progress
+          xhr.addEventListener("progress", function(evt){
+            if (evt.lengthComputable) {
+              var percentComplete = evt.loaded / evt.total;
+              //Do something with download progress
+              var x = document.getElementsByName("{{ module.id }}")
+              for (i = 0; i < x.length; i++) {
+                  x[i].innerHTML = percentComplete;
+              }
+              console.log(percentComplete);
+            }
+          }, false);
+          return xhr;
+        },
+        type: 'GET',
+        url: $SCRIPT_ROOT + "/get_from_module/{{ module.url }}",
+        success: function(data){
+          var x = document.getElementsByName("{{ module.id }}")
+          var i;
+          for (i = 0; i < x.length; i++) {
+              x[i].innerHTML = data;
+              setTimeout(change_background.bind(null, x[i], x[i].style.backgroundColor), 500);
+              x[i].style.backgroundColor = '#00a4e4';
+          }
         }
       });
     }
+
+    {{ module.function }}()
+
   {% endfor %}
 </script>
 {% endblock %}

@@ -13,7 +13,7 @@ def test():
     well = bootstrapy.build_well('<span name="hw">Loading...</span>')
     well_2x2 = bootstrapy.build_2x2_grid(well, well, well, well)
 
-    hello_world_module = {'interval': '1000', 'function': 'hello_func', 'url': 'hello-world', 'id': 'hw'}
+    hello_world_module = {'interval': '5000', 'function': 'hello_func', 'url': 'hello-world', 'id': 'hw'}
 
     return render_template("main.html", content=well_2x2, modules=[hello_world_module])
 

@@ -11,7 +11,7 @@ app.register_blueprint(module.api)
 
 @app.route('/hello-world')
 def hello_world():
-    return "<html>Hello World</html>"
+    return "<html>Hello World!</html>"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
