@@ -15,3 +15,8 @@ def get_module(module_id):
         return modules[module_id]
     else:
         return None
+
+def remove_module(module_id):
+    global modules
+    if module_id in modules:
+        modules.pop(module_id)
