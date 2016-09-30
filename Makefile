@@ -10,14 +10,17 @@ deploy:
 	sudo docker network create --driver bridge $(NETWORK)
 	./src/flask/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/flask)) $(NETWORK)
 	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator)) $(NETWORK)
+	./src/modules/hello-world/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/modules/hello-world)) $(NETWORK)
 
 stop:
 	sudo docker stop flaskapp
 	sudo docker stop koncentrator
+	sudo docker stop hello-world
 
 rm: stop
 	sudo docker rm flaskapp
 	sudo docker rm koncentrator
+	sudo docker rm hello-world
 
 clean:
 	rm -rf *~ *#
