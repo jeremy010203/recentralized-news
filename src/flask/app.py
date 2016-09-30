@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/test')
 def test():
-    well = bootstrapy.build_border('<span name="hw">Loading...</span>')
+    well = bootstrapy.build_well('<span name="hw">Loading...</span>')
     well_2x2 = bootstrapy.build_2x2_grid(well, well, well, well)
 
     hello_world_module = {'interval': '1000', 'function': 'hello_func', 'url': 'hello-world', 'id': 'hw'}

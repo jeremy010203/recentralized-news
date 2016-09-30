@@ -20,6 +20,10 @@
 
 {% block javascript %}
 <script>
+
+    function change_background(element, color) {
+      element.style.backgroundColor = color
+    }
   {% for module in modules %}
     setInterval({{ module.function }}, {{ module.interval }});
     function {{ module.function }}() {
@@ -28,6 +32,8 @@
         var i;
         for (i = 0; i < x.length; i++) {
             x[i].innerHTML = data;
+            setTimeout(change_background.bind(null, x[i], x[i].style.backgroundColor), 200);
+            x[i].style.backgroundColor = 'blue';
         }
       });
     }
