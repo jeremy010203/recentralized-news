@@ -1,3 +1,5 @@
+#! /bin/usr/python3
+
 from flask import Flask, request, render_template, jsonify
 import subprocess
 import re, sys
@@ -54,7 +56,7 @@ def ping():
             count = count + 1
             res += int(m)
         return out + '<br/>moy = '+ str(res / count) + 'ms'
-    except Exception, e:
+    except Exception as e:
         return "Unexpected error:" + str(e)
 
 if __name__ == '__main__':

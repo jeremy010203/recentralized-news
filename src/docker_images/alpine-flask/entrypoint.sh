@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ ! -f /debug0 ]; then
 	if [ -e requirements.txt ]; then
-		pip install -r requirements.txt
+		pip3 install -r requirements.txt
 	fi
 
 	touch /debug0
@@ -31,4 +31,4 @@ if [ ! -f /debug0 ]; then
 	done
 fi
 
-python app.py
+python3 app.py

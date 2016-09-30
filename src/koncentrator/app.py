@@ -1,3 +1,5 @@
+#! /bin/usr/python3
+
 from flask import Flask
 from config import reader
 from view_api import view
@@ -28,4 +30,3 @@ def get_module(module_id):
         return modules[module_id]
     else:
         return None
->>>>>>> [FIX] koncentrator port flask
