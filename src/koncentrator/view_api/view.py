@@ -20,6 +20,6 @@ def info_koncentrator():
 def get_content(module_id):
     module = utils.get_module(module_id)
     if module is not None:
-        return module.module_name
+        return module.get_content()
     else:
         return "<html>No module found</html>"
