@@ -1,5 +1,5 @@
 from flask import jsonify, Blueprint
-import utils
+from utils import utils
 
 api = Blueprint('api', __name__)
 

@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint, current_app
-import utils
+from utils import utils
 
 api = Blueprint('module', __name__)
 
