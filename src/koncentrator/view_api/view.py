@@ -1,14 +1,14 @@
 from flask import jsonify, Blueprint
-import app
+import utils
 
 api = Blueprint('api', __name__)
 
 @api.route('/info/list/module')
 def list_module():
     dict = {}
-    modules = app.get_modules()
-    for module in modules:
-        dict[module] = modules[module].module_name
+    modules = utils.get_modules()
+    for module_key in modules:
+        dict[module_key] = modules[module_key].module_name
     return jsonify(dict)
 
 @api.route('/info/koncentrator')
@@ -18,7 +18,7 @@ def info_koncentrator():
 
 @api.route('/module/<string:module_id>/content')
 def get_content(module_id):
-    module = app.get_module(module_id)
+    module = utils.get_module(module_id)
     if module is not None:
         return module.module_name
     else:

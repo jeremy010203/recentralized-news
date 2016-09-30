@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint, current_app
-import app
+import utils
 
 api = Blueprint('module', __name__)
 
@@ -11,7 +11,7 @@ def register_module():
     dict = request.json 
     current_app.logger.debug("Got connection from: %s", dict['name'])
     module = Module(dict['name'])
-    app.add_module(module)
+    utils.add_module(module)
     answer = {}
     answer['success'] = True
     return jsonify(answer)
