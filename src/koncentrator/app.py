@@ -14,7 +14,12 @@ def hello_world():
     return "<html>Hello World!</html>"
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
+    settings = Settings("config.yml")
+    if "port" in settings.get_content():
+        port = settings.get_content().port
+    else:
+        port = 80
+    app.run(host='0.0.0.0', port=port, debug=True, threaded=True)
 
 def add_module(module):
     global modules
