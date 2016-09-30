@@ -12,7 +12,7 @@ deploy:
 	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator)) $(NETWORK)
 
 stop:
-	sudo docker stop flaskappf
+	sudo docker stop flaskapp
 	sudo docker stop koncentrator
 
 rm: stop
