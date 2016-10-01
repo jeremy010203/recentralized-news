@@ -22,4 +22,4 @@ def get_content(module_id):
     if module is not None:
         return module.get_content()
     else:
-        return "<html>No module found</html>"
+        return "<html>No module found</html>", 404
