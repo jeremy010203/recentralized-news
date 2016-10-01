@@ -11,3 +11,5 @@
     koncentrator -> module4;
   }
 )
+
+See the [Wiki](/wiki) for more information about the API.
