@@ -7,8 +7,18 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-sudo docker stop koncentrator
-sudo docker rm koncentrator
+if [ ! -n "$(sudo docker network ls | grep "$2")" ]; then
+    echo "Error: Network '$2' does not exit"
+    exit 2
+elif [ -n "$(sudo docker ps | grep "koncentrator")" ]; then
+		echo "Stopping 'koncentrator' container:"
+    sudo docker stop koncentrator
+		echo "Removing 'koncentrator' container:"
+    sudo docker rm koncentrator
+elif [ -n "$(sudo docker ps -a | grep "koncentrator")" ]; then
+		echo "Removing 'koncentrator' container:"
+    sudo docker rm koncentrator
+fi
 sudo docker run --network=$2 --name koncentrator \
     -d \
     -v $1:/app \

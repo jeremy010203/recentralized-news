@@ -7,8 +7,18 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-sudo docker stop flaskapp
-sudo docker rm flaskapp
+if [ ! -n "$(sudo docker network ls | grep "$2")" ]; then
+    echo "Error: Network '$2' does not exit"
+    exit 2
+elif [ -n "$(sudo docker ps | grep "flaskapp")" ]; then
+		echo "Stopping 'flaskapp' container:"
+    sudo docker stop flaskapp
+		echo "Removing 'flaskapp' container:"
+    sudo docker rm flaskapp
+elif [ -n "$(sudo docker ps -a | grep "flaskapp")" ]; then
+		echo "Removing 'flaskapp' container:"
+    sudo docker rm flaskapp
+fi
 sudo docker run --network=$2 --name flaskapp \
     -d \
     -p 80:80 \

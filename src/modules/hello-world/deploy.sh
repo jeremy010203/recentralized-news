@@ -7,8 +7,18 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-sudo docker stop hello-world
-sudo docker rm hello-world
+if [ ! -n "$(sudo docker network ls | grep "$2")" ]; then
+    echo "Error: Network '$2' does not exit"
+    exit 2
+elif [ -n "$(sudo docker ps | grep "hello-world")" ]; then
+		echo "Stopping 'hello-world' container:"
+    sudo docker stop hello-world
+		echo "Removing 'hello-world' container:"
+    sudo docker rm hello-world
+elif [ -n "$(sudo docker ps -a | grep "hello-world")" ]; then
+		echo "Removing 'hello-world' container:"
+    sudo docker rm hello-world
+fi
 sudo docker run --network=$2 --name hello-world \
     -d \
     -v $1:/app \
