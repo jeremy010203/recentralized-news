@@ -21,15 +21,11 @@ def build_well(content):
 
 def build_grid(list_modules):
     if (len(list_modules) == 0):
-        return "No module..."
+        return ""
     if (len(list_modules) == 1):
         return list_modules.pop()
     if (len(list_modules) == 2):
         return build_2x1_grid(list_modules.pop(), list_modules.pop())
-    if (len(list_modules) == 3):
-        return build_2x2_grid(list_modules.pop(), list_modules.pop(), list_modules.pop(), "")
-    if (len(list_modules) == 4):
-        return build_2x2_grid(list_modules.pop(), list_modules.pop(), list_modules.pop(), list_modules.pop())
     l1 = [[], [], [], []]
     i = 0
     while (len(list_modules) > 0):
