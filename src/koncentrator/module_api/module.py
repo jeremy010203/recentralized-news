@@ -29,9 +29,9 @@ class Module:
     def get_content(self):
         try:
             req = requests.get("http://{0}:{1}/content".format(self.module_name, "80"))
-            if req.status_code == 200:
-                return req.content
         except:
-            utils.remove_module(self.module_id)
-            return "<html>Error !</html>"
+            req = None
+        if req is not None and req.status_code == 200:
+            return req.content
         utils.remove_module(self.module_id)
+        return "<html>Error !</html>"
