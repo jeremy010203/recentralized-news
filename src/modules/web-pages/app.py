@@ -12,7 +12,7 @@ def main():
     doc = xmltodict.parse(out)
     res = ""
     for item in doc['rss']['channel']['item']:
-        res = res + str(item['title']) + '<br />'
+        res = res + "<a href='" + str(item['link']) + "'>"+ str(item['title']) + '</a><br />'
     return res
 
 if __name__ == '__main__':
