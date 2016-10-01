@@ -18,19 +18,7 @@ def test():
         list_modules = list_modules + [{'interval': str(1000 * 60), 'function': (modules[m].replace('-', '_')) + '_func', 'url': m, 'id': modules[m]}]
         list_wells = list_wells + [bootstrapy.build_well('<span name="' + modules[m] + '">Loading...</span>')]
 
-    if (len(list_wells) == 0):
-        return render_template("main.html", content="No modules :(", modules=list_modules)
-    elif (len(list_wells) == 1):
-        return render_template("main.html", content=list_wells[0], modules=list_modules)
-    elif (len(list_wells) == 2):
-        return render_template("main.html", content=bootstrapy.build_2x2_grid(list_wells[0], list_wells[1], "No module...", "No module..."), modules=list_modules)
-    elif (len(list_wells) == 3):
-        return render_template("main.html", content=bootstrapy.build_2x2_grid(list_wells[0], list_wells[1], list_wells[2], "No module..."), modules=list_modules)
-    elif (len(list_wells) == 4):
-        return render_template("main.html", content=bootstrapy.build_2x2_grid(list_wells[0], list_wells[1], list_wells[2], list_wells[3]), modules=list_modules)
-    elif (len(list_wells) == 5):
-        return render_template("main.html", content="Too much modules :(", modules=list_modules)
-
+    return render_template("main.html", content=bootstrapy.build_grid(list_wells), modules=list_modules)
 
 @app.route('/get_from_module/<module>')
 def get_from_module(module):
