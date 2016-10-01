@@ -12,4 +12,4 @@
   }
 )
 
-See the [Wiki](/wiki) for more information about the API.
+See the [Wiki](https://github.com/jeremy010203/recentralized-news/wiki) for more information about the API.
