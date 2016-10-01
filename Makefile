@@ -11,16 +11,19 @@ deploy:
 	./src/flask/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/flask)) $(NETWORK)
 	./src/koncentrator/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/koncentrator)) $(NETWORK)
 	./src/modules/hello-world/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/modules/hello-world)) $(NETWORK)
+	./src/modules/web-pages/deploy.sh $(shell echo $(shell pwd)$(shell echo /src/modules/web-pages)) $(NETWORK)
 
 stop:
 	sudo docker stop flaskapp
 	sudo docker stop koncentrator
 	sudo docker stop hello-world
+	sudo docker stop web-pages
 
-rm: stop
-	sudo docker rm flaskapp
-	sudo docker rm koncentrator
-	sudo docker rm hello-world
+rm:
+	sudo docker rm -f flaskapp
+	sudo docker rm -f koncentrator
+	sudo docker rm -f hello-world
+	sudo docker rm -f web-pages
 
 clean:
 	rm -rf *~ *#
