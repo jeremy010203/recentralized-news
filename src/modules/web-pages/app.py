@@ -2,12 +2,18 @@
 
 from flask import Flask
 import subprocess
+import xmltodict
 
 app = Flask(__name__)
 
 @app.route('/content')
 def main():
-    return "<iframe src='http://epita.fr' width='100%' height='100%'></iframe>"
+    out = subprocess.check_output(["curl", "www.lemonde.fr/rss/une.xml"]).decode('utf-8')
+    doc = xmltodict.parse(out)
+    res = ""
+    for item in doc['rss']['channel']['item']:
+        res = res + str(item['title']) + '<br />'
+    return res
 
 if __name__ == '__main__':
     out = subprocess.check_output(["curl", "-X","POST", "-H", "Content-Type: application/json", "-d", '{"name": "web-pages"}', 'koncentrator:80/module/register']).decode('utf-8')
