@@ -15,7 +15,7 @@ def test():
     list_modules = []
     list_wells = []
     for m in modules:
-        list_modules = list_modules + [{'interval': str(1000 * 60), 'function': (modules[m].replace('-', '_')) + '_func', 'url': m, 'id': modules[m]}]
+        list_modules = list_modules + [{'interval': str(1000 * 10), 'function': (modules[m].replace('-', '_')) + '_func', 'url': m, 'id': modules[m]}]
         list_wells = list_wells + [bootstrapy.build_well('<span name="' + modules[m] + '">Loading...</span>')]
 
     return render_template("main.html", content=bootstrapy.build_grid(list_wells), modules=list_modules)
