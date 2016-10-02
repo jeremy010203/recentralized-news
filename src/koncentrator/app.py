@@ -15,8 +15,12 @@ def hello_world():
 
 if __name__ == "__main__":
     settings = reader.Settings("config.yml")
-    if "port" in settings.get_content():
-        port = settings.get_content().port
+    if 'host' in settings.get_settings():
+        host = settings.get_settings()['host']
+    else:
+        host = '0.0.0.0'
+    if 'port' in settings.get_settings():
+        port = settings.get_settings()['port']
     else:
         port = 80
-    app.run(host='0.0.0.0', port=port, debug=True, threaded=True)
+    app.run(host=host, port=port, debug=True, threaded=True)

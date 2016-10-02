@@ -20,14 +20,13 @@
 
 {% block javascript %}
 <script>
-
     function change_background(element, color) {
       element.style.backgroundColor = color
     }
   {% for module in modules %}
     setInterval({{ module.function }}, {{ module.interval }});
     function {{ module.function }}() {
-
+      document.getElementById('ting_sound').play();
       $.ajax({
         xhr: function()
         {
@@ -72,7 +71,7 @@
       });
     }
 
-    {{ module.function }}()
+    {{ module.function }}();
 
   {% endfor %}
 </script>
