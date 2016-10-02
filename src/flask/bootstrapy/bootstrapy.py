@@ -19,6 +19,9 @@ def build_border(content):
 def build_well(content):
     return '<div class="well" style="height: 100%; width: 100%;">' + content + '</div>'
 
+def build_side_panel(left, right):
+    return build_row(build_col_md(left, 2, 100) + build_col_md(right, 10, 100), 100)
+
 def build_grid(list_modules):
     if (len(list_modules) == 0):
         return ""

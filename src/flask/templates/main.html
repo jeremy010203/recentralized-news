@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
   <link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css"/>
+  <script type="text/javascript" src="static/jquery/jquery.js"></script>
   <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="static/jquery/jquery.min.js"></script>
   <script type="text/javascript"> var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}</script>
   <style>
         html,body{height:100%;}
@@ -35,11 +35,8 @@
           xhr.upload.addEventListener("progress", function(evt){
             if (evt.lengthComputable) {
               var percentComplete = evt.loaded / evt.total;
-              //Do something with upload progress
-              var x = document.getElementsByName("{{ module.id }}")
-              for (i = 0; i < x.length; i++) {
-                  x[i].innerHTML = percentComplete;
-              }
+              var x = document.getElementById("{{ module.id }}");
+              x.innerHTML = percentComplete;
               console.log(percentComplete);
             }
           }, false);
@@ -47,11 +44,8 @@
           xhr.addEventListener("progress", function(evt){
             if (evt.lengthComputable) {
               var percentComplete = evt.loaded / evt.total;
-              //Do something with download progress
-              var x = document.getElementsByName("{{ module.id }}")
-              for (i = 0; i < x.length; i++) {
-                  x[i].innerHTML = percentComplete;
-              }
+              var x = document.getElementById("{{ module.id }}");
+              x.innerHTML = percentComplete;
               console.log(percentComplete);
             }
           }, false);
@@ -60,18 +54,19 @@
         type: 'GET',
         url: $SCRIPT_ROOT + "/get_from_module/{{ module.url }}",
         success: function(data){
-          var x = document.getElementsByName("{{ module.id }}")
-          var i;
-          for (i = 0; i < x.length; i++) {
-              x[i].innerHTML = data;
-              setTimeout(change_background.bind(null, x[i], x[i].style.backgroundColor), 500);
-              x[i].style.backgroundColor = '#00a4e4';
-          }
+          var x = document.getElementById("{{ module.id }}");
+          x.innerHTML = data;
+          setTimeout(change_background.bind(null, x, x.style.backgroundColor), 500);
+          x.style.backgroundColor = '#00a4e4';
         }
       });
     }
 
     {{ module.function }}();
+
+    $("#{{ module.id }}_button").click(function() {
+      $("#{{ module.id }}").slideToggle();
+    });
 
   {% endfor %}
 </script>
