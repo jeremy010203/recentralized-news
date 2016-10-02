@@ -22,6 +22,7 @@ rm:
 	-sudo docker rm -f flaskapp
 	-sudo docker rm -f koncentrator
 	-sudo docker rm -f hello-world
+	-sudo docker rm -f web-pages
 	-sudo docker network rm $(NETWORK)
 
 clean:
