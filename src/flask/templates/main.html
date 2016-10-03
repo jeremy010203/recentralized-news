@@ -8,10 +8,10 @@
   <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript"> var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}</script>
   <style>
-        html,body{height:100%;}
+        html, body { height:100%; }
 
     .container-fluid {
-      height:100%;
+      height: 100%;
       background-color: grey;
     }
   </style>
@@ -21,53 +21,102 @@
 {% block javascript %}
 <script>
     function change_background(element, color) {
-      element.style.backgroundColor = color
+      element.style.backgroundColor = color;
     }
-  {% for module in modules %}
-    setInterval({{ module.function }}, {{ module.interval }});
-    function {{ module.function }}() {
-      document.getElementById('ting_sound').play();
-      $.ajax({
-        xhr: function()
-        {
-          var xhr = new window.XMLHttpRequest();
-          //Upload progress
-          xhr.upload.addEventListener("progress", function(evt){
-            if (evt.lengthComputable) {
-              var percentComplete = evt.loaded / evt.total;
-              var x = document.getElementById("{{ module.id }}");
-              x.innerHTML = percentComplete;
-              console.log(percentComplete);
-            }
-          }, false);
-          //Download progress
-          xhr.addEventListener("progress", function(evt){
-            if (evt.lengthComputable) {
-              var percentComplete = evt.loaded / evt.total;
-              var x = document.getElementById("{{ module.id }}");
-              x.innerHTML = percentComplete;
-              console.log(percentComplete);
-            }
-          }, false);
-          return xhr;
-        },
-        type: 'GET',
-        url: $SCRIPT_ROOT + "/get_from_module/{{ module.url }}",
-        success: function(data){
-          var x = document.getElementById("{{ module.id }}");
-          x.innerHTML = data;
-          setTimeout(change_background.bind(null, x, x.style.backgroundColor), 500);
-          x.style.backgroundColor = '#00a4e4';
+
+    function build_well(content, id) {
+      if (id === "")
+        return '<div class="well" style="height: 100%; width: 100%;">' + content + '</div>';
+      else
+        return '<div id="' + id + '_grid" class="well" style="height: 100%; width: 100%;">' + content + '</div>';
+    }
+
+    function build_container(content) {
+        return '<div class="container-fluid">' + content + '</div>';
+    }
+
+    function build_col_md(content, nb, height) {
+        return '<div class="col-md-' + nb + '" style="height: ' + height + '%; padding: 0 !important;margin: 0 !important;">' + content + '</div>';
+    }
+
+    function build_row(content, height) {
+        return '<div class="row" style="height: ' + height + '%">'+ content + '</div>';
+    }
+
+    function build_2x1_grid(c1, c2) {
+        return build_container (build_row (build_col_md(c1, 6, 100) + build_col_md(c2, 6, 100), 100));
+    }
+
+    function build_2x2_grid(c1, c2, c3, c4) {
+        return build_container (build_row (build_col_md(c1, 6, 100) + build_col_md(c2, 6, 100), 50) + build_row (build_col_md(c3, 6, 100) + build_col_md(c4, 6, 100), 50))
+    }
+
+    function build_grid(list_modules, count) {
+        if (count === 0) {
+            return "No modules";
         }
-      });
+        if (count === 1) {
+            var m = list_modules.pop();
+            return build_well(m[0], m[1]);
+        }
+        if (count === 2) {
+          var m1 = list_modules.pop();
+          var m2 = list_modules.pop();
+          return build_2x1_grid(build_well(m1[0], m1[1]), build_well(m2[0], m2[1]));
+        }
+        var l1 = [[], [], [], []];
+        var i = 0;
+        while (list_modules.length > 0) {
+            l1[i % 4] = l1[i % 4] + [list_modules.pop()];
+            i = i + 1;
+        }
+
+        return build_2x2_grid(build_grid(l1[0]), build_grid(l1[1]), build_grid(l1[2]),build_grid(l1[3]));
     }
 
-    {{ module.function }}();
+    setInterval(update_panel, 10000)
+    function update_panel() {
+      $.get($SCRIPT_ROOT + "/module/list", function(data){
+          json = JSON.parse(data);
+          $("#panel").empty();
 
-    $("#{{ module.id }}_button").click(function() {
-      $("#{{ module.id }}").slideToggle();
-    });
+          for(var elt in json) {
+            $("#panel").html($("#panel").html() + '<button id="' + elt + '_button" type="button" class="btn btn-primary" style="width:100%">' + json[elt] + '</button>');
+          }
 
-  {% endfor %}
+          $("#panel").html(build_well($("#panel").html()));
+
+          for (var elt in json) {
+            (function(elt, json) {
+              $("#" + elt + "_button").click(function() {
+                $("#" + elt + "_grid").slideToggle();
+              });
+            })(elt, json)
+          }
+
+          $("#content").empty();
+
+          var list_modules = new Array();
+          var count = 0;
+          for(var elt2 in json) {
+            (function(e, j) {
+              $.ajax({
+                   async: false,
+                   type: 'GET',
+                   url: $SCRIPT_ROOT + "/get_from_module/" + e,
+                   success: function(content_module){
+                     list_modules.push([content_module, e]);
+                     count += 1;
+                     //x.style.backgroundColor = '#00a4e4';
+                   }
+              });
+            })(elt2, json)
+          }
+          console.log(count);
+          $("#content").html(build_grid(list_modules, count));
+
+        });
+    }
+    update_panel()
 </script>
 {% endblock %}
