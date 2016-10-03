@@ -14,6 +14,20 @@
       height: 100%;
       background-color: grey;
     }
+
+    .row {
+      height: 50%;
+    }
+
+    .col-md-6 {
+      height: 100%;
+    }
+
+    .thumbnail {
+      height: 100%;
+      overflow-x:scroll;
+    }
+
   </style>
 </head>
 {% endblock %}
@@ -39,8 +53,8 @@
         return '<div class="col-md-' + nb + '" style="height: ' + height + '%; padding: 0 !important;margin: 0 !important;">' + content + '</div>';
     }
 
-    function build_row(content, height) {
-        return '<div class="row" style="height: ' + height + '%">'+ content + '</div>';
+    function build_row(content) {
+        return '<div class="row">'+ content + '</div>';
     }
 
     function build_2x1_grid(c1, c2) {
@@ -80,12 +94,11 @@
            type: 'GET',
            url: $SCRIPT_ROOT + "/get_from_module/" + e,
            success: function(content_module){
-             $("#" + e + "_grid").html(content_module);
+             $("#" + e + "_grid").html('<div class="thumbnail">'+ content_module + '</div>');
            }
       });
     }
 
-    //setInterval(update_panel, 10000)
     function update_panel() {
       $.get($SCRIPT_ROOT + "/module/list", function(data){
           json = JSON.parse(data);
@@ -100,7 +113,7 @@
           for (var elt in json) {
             (function(elt, json) {
               $("#" + elt + "_button").click(function() {
-                $("#" + elt + "_grid").slideToggle();
+                $("#" + elt + "_grid").fadeToggle();
               });
             })(elt, json)
           }
@@ -116,7 +129,18 @@
               setInterval(update_module.bind("", e), 10000);
             })(elt, json)
           }
-          $("#content").html(build_grid(list_modules, count));
+
+          //$("#content").html(build_grid(list_modules, count));
+          var c = "";
+          count = 0;
+          for(var elt in json) {
+            count += 1;
+            c += '<div id="' + elt + '_grid" class="col-md-6" style="padding: 0 !important;margin: 0 !important; width: 50%;"><div class="thumbnail">Loading...</div></div>';
+            if (count % 2 === 0)
+              c += '<div class="clearfix visible-md-block"></div>';
+          }
+
+          $("#content").html(build_container(build_row(c)));
           for(var elt in json) {
             update_module(elt);
           }
