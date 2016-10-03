@@ -74,7 +74,18 @@
         return build_2x2_grid(build_grid(l1[0]), build_grid(l1[1]), build_grid(l1[2]),build_grid(l1[3]));
     }
 
-    setInterval(update_panel, 10000)
+    function update_module(e) {
+      $.ajax({
+           async: false,
+           type: 'GET',
+           url: $SCRIPT_ROOT + "/get_from_module/" + e,
+           success: function(content_module){
+             $("#" + e + "_grid").html(content_module);
+           }
+      });
+    }
+
+    //setInterval(update_panel, 10000)
     function update_panel() {
       $.get($SCRIPT_ROOT + "/module/list", function(data){
           json = JSON.parse(data);
@@ -98,23 +109,17 @@
 
           var list_modules = new Array();
           var count = 0;
-          for(var elt2 in json) {
+          for(var elt in json) {
             (function(e, j) {
-              $.ajax({
-                   async: false,
-                   type: 'GET',
-                   url: $SCRIPT_ROOT + "/get_from_module/" + e,
-                   success: function(content_module){
-                     list_modules.push([content_module, e]);
-                     count += 1;
-                     //x.style.backgroundColor = '#00a4e4';
-                   }
-              });
-            })(elt2, json)
+              count += 1;
+              list_modules.push(["Loading...", e]);
+              setInterval(update_module.bind("", e), 10000);
+            })(elt, json)
           }
-          console.log(count);
           $("#content").html(build_grid(list_modules, count));
-
+          for(var elt in json) {
+            update_module(elt);
+          }
         });
     }
     update_panel()
