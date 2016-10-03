@@ -20,7 +20,7 @@ elif [ -n "$(sudo docker ps -a | grep "hello-world-push")" ]; then
     sudo docker rm hello-world-push
 fi
 sudo docker run --network=$2 --name hello-world-push \
-	  -d \
+    -d \
     -v $1:/app \
     -t flask
 
