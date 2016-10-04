@@ -14,11 +14,17 @@ def test():
     modules = json.loads(subprocess.check_output(["curl", 'koncentrator:80/info/list/module']).decode('utf-8'))
     list_modules = []
     list_wells = []
+    content_panel = ""
     for m in modules:
         list_modules = list_modules + [{'interval': str(1000 * 10), 'function': (modules[m].replace('-', '_')) + '_func', 'url': m, 'id': modules[m]}]
-        list_wells = list_wells + [bootstrapy.build_well('<span name="' + modules[m] + '">Loading...</span>')]
+        list_wells = list_wells + [bootstrapy.build_well('<div id="' + modules[m] + '">Loading...</div>')]
+        content_panel += '<button id="' + modules[m] + '_button" type="button" class="btn btn-primary" style="width:100%">' + modules[m] + '</button>'
+    return render_template("main.html", content="", modules=[])
+    #return render_template("main.html", content=bootstrapy.build_side_panel(bootstrapy.build_well(content_panel), bootstrapy.build_grid(list_wells)), modules=list_modules)
 
-    return render_template("main.html", content=bootstrapy.build_grid(list_wells), modules=list_modules)
+@app.route('/module/list')
+def list_modules():
+    return subprocess.check_output(["curl", 'koncentrator:80/info/list/module']).decode('utf-8')
 
 @app.route('/get_from_module/<module>')
 def get_from_module(module):

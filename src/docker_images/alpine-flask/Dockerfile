@@ -8,8 +8,11 @@ RUN apk add --no-cache python3 curl && \
     pip3 install --upgrade pip setuptools && \
     rm -r /root/.cache
 
-RUN apk add --no-cache bash git nginx uwsgi uwsgi-python py-pip \
-	&& pip3 install flask
+RUN apk add --no-cache bash git nginx uwsgi uwsgi-python py-pip
+
+COPY requirements.txt /requirements.txt
+
+RUN pip3 install -r /requirements.txt
 
 # application folder
 ENV APP_DIR /app
