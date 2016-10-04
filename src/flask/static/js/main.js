@@ -1,3 +1,7 @@
+var list_id = new Array();
+var list_interval = new Array();
+var c = "";
+var json = "";
 
 function change_background(element, color) {
   element.style.backgroundColor = color;
@@ -53,6 +57,21 @@ function build_grid(list_modules, count) {
   return build_2x2_grid(build_grid(l1[0]), build_grid(l1[1]), build_grid(l1[2]),build_grid(l1[3]));
 }
 
+function remove_module(e) {
+  remove(list_id, e);
+  clearInterval(list_interval[e]);
+  if ($("#" + e + "_grid").get(0) != undefined)
+    $("#" + e + "_grid").get(0).outerHTML = "";
+}
+
+function remove(arr, item) {
+  for(var i = arr.length; i--;) {
+    if(arr[i] === item) {
+        arr.splice(i, 1);
+    }
+  }
+}
+
 function update_module(e) {
   $.ajax({
     async: false,
@@ -60,55 +79,84 @@ function update_module(e) {
     url: $SCRIPT_ROOT + "/get_from_module/" + e,
     success: function(content_module){
       $("#" + e + "_grid").html('<div class="thumbnail">'+ content_module + '</div>');
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+      remove_module(e);
     }
   });
 }
 
+setInterval(update_panel, 10000);
 function update_panel() {
-  $.get($SCRIPT_ROOT + "/module/list", function(data){
-    json = JSON.parse(data);
-    $("#panel").empty();
+  $.ajax({
+    url: $SCRIPT_ROOT + "/module/list",
+    type: 'GET',
+    success: function(data){
+      json = JSON.parse(data);
+      $("#panel").empty();
 
-    for(var elt in json) {
-      $("#panel").html($("#panel").html() + '<button id="' + elt + '_button" type="button" class="btn btn-primary" style="width:100%">' + json[elt] + '</button>');
-    }
+      for(var elt in json) {
+        $("#panel").html($("#panel").html() + '<button id="' + elt + '_button" type="button" class="btn btn-primary" style="width:100%">' + json[elt] + '</button>');
+      }
 
-    $("#panel").html(build_well($("#panel").html()));
+      $("#panel").html(build_well($("#panel").html()));
 
-    for (var elt in json) {
-      (function(elt, json) {
-        $("#" + elt + "_button").click(function() {
-          $("#" + elt + "_grid").fadeToggle();
-        });
-      })(elt, json)
-    }
+      for (var elt in json) {
+        (function(elt, json) {
+          $("#" + elt + "_button").click(function() {
+            $("#" + elt + "_grid").fadeToggle();
+          });
+        })(elt, json)
+      }
 
-    $("#content").empty();
-
-    var list_modules = new Array();
-    var count = 0;
-    for(var elt in json) {
-      (function(e, j) {
-        count += 1;
-        list_modules.push(["Loading...", e]);
-        setInterval(update_module.bind("", e), 10000);
-      })(elt, json)
-    }
-
-    //$("#content").html(build_grid(list_modules, count));
-    var c = "";
-    count = 0;
-    for(var elt in json) {
-      count += 1;
-      c += '<div id="' + elt + '_grid" class="col-md-6" style="padding: 0 !important;margin: 0 !important; width: 50%;"><div class="thumbnail">Loading...</div></div>';
-      if (count % 2 === 0)
-      c += '<div class="clearfix visible-md-block"></div>';
-    }
-
-    $("#content").html(build_container(build_row(c)));
-    for(var elt in json) {
-      update_module(elt);
+      update_content();
+    },
+    error: function(data) {
+      for (var i in list_id)
+        clearInterval(list_interval[i]);
+      list_id = new Array();
+      $("#panel").html(build_well(""));
+      $("#content").html(build_container(build_row("")));
     }
   });
 }
-update_panel()
+
+function update_content() {
+  c = "";
+  var count = 0;
+  for(var elt in json) {
+    (function(e, j) {
+      if (!list_id.includes(e)) {
+        count += 1;
+        list_id.push(e);
+        list_interval[e] = setInterval(update_module.bind("", e), 10000);
+
+        c += '<div id="' + e + '_grid" class="col-md-6" style="padding: 0 !important;margin: 0 !important; width: 50%;"><div class="thumbnail">Loading...</div></div>';
+        if (count % 2 === 0)
+          c += '<div class="clearfix visible-md-block"></div>';
+      }
+      else {
+        count += 1;
+        if ($("#" + e + "_grid").get(0) != undefined)
+          c += $("#" + e + "_grid").get(0).outerHTML;
+        if (count % 2 === 0)
+          c += '<div class="clearfix visible-md-block"></div>';
+      }
+    })(elt, json)
+  }
+
+  for (var l in list_id) {
+    if (!(l in json)) {
+      remove_module(l);
+    }
+  }
+
+  $("#content").html(build_container(build_row(c)));
+
+  for(var elt in json) {
+    update_module(elt);
+  }
+}
+
+$("#content").html(build_container(build_row("")));
+update_panel();

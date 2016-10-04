@@ -31,4 +31,4 @@ clean:
 	$(RM) src/koncentrator/*~ src/koncentrator/*# src/koncentrator/*.pyc
 	$(RM) src/flask/alpine-flask/*~ src/docker_images/alpine-flask/*# src/docker_images/alpine-flask/*.pyc
 
-.PHONY: deploy clean stop rm build
+.PHONY: deploy clean stop rm build deploy-modules
