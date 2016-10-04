@@ -18,8 +18,13 @@ def info_koncentrator():
 
 @api.route('/module/<string:module_id>/content')
 def get_content(module_id):
+    answer = {}
+    answer['id'] = module_id
     module = utils.get_module(module_id=module_id)
     if module is not None:
-        return module.get_content()
+        answer['content'], answer['success'] = module.get_content()
+        return jsonify(answer)
     else:
-        return "<html>No module found</html>", 404
+        answer['success'] = False
+        answer['error'] = "This id does not refer any module"
+        return jsonify(answer), 404
