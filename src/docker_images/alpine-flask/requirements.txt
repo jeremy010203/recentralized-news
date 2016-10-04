@@ -1,0 +1,5 @@
+flask
+pyyaml
+requests
+flask-restful>=0.3.5
+xmltodict>=0.10.2
