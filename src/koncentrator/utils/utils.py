@@ -11,14 +11,11 @@ def get_modules():
 
 def get_module(module_id=None, token=None):
     global modules
-    print("Module id: " + str(module_id))
-    print("Token: " + str(token))
     if module_id is not None and module_id in modules:
         return modules[module_id]
     elif token is not None:
         for id in modules:
             if token == modules[id].private_token:
-                print("Id: " + str(id))
                 return modules[id]
     return None
 
