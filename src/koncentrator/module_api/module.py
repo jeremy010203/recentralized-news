@@ -25,10 +25,10 @@ def register_module():
 @api.route('/module/<string:module_id>/content', methods=['POST'])
 def register_content(module_id):
     dict = request.json
-    current_app.logger.debug("Got content for module '%s':\n%s", module_id, request.json)
     module = utils.get_module(module_id)
     answer = {}
     if module is not None:
+        current_app.logger.debug("Got content for module '%s':\n%s", module.module_id, request.json)
         ct = content.Content(module.expiration, dict['content'])
         module.cache_content(ct)
         answer['success'] = True
@@ -38,9 +38,9 @@ def register_content(module_id):
 
 class Module:
     module_name = None
-    module_id = 0
+    module_id = None
     push_method = False
-    contents = []
+    contents = None
     expiration = None
 
     def __init__(self, settings):
@@ -49,6 +49,7 @@ class Module:
         module_id += 1
         self.module_name = settings['name']
         if 'push' in settings:
+            self.contents = []
             self.push_method = settings['push']
             if "expiration" in settings:
                 self.expiration = settings['expiration']
