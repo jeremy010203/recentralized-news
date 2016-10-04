@@ -1,7 +1,8 @@
 from flask import request, jsonify, Blueprint, current_app
 from utils import utils
-import requests
 from . import content
+import uuid
+import requests
 
 api = Blueprint('module', __name__)
 
@@ -18,14 +19,14 @@ def register_module():
     answer = {}
     answer['success'] = True
     if 'push' in dict and bool(dict['push']):
-        current_app.logger.debug("The module '%s' (%d) is a push module", dict['name'], int(module.module_id))
-        answer['id'] = module.module_id
+        current_app.logger.debug("The module '%s' (%d)(%s) is a push module", dict['name'], int(module.module_id), module.private_token)
+        answer['token'] = module.private_token
     return jsonify(answer)
 
-@api.route('/module/<string:module_id>/content', methods=['POST'])
-def register_content(module_id):
+@api.route('/module/<string:token>/content', methods=['POST'])
+def register_content(token):
     dict = request.json
-    module = utils.get_module(module_id)
+    module = utils.get_module(token=token)
     answer = {}
     if module is not None:
         current_app.logger.debug("Got content for module '%s':\n%s", module.module_id, request.json)
@@ -42,6 +43,7 @@ class Module:
     push_method = False
     contents = None
     expiration = None
+    private_token = None
 
     def __init__(self, settings):
         global module_id
@@ -49,6 +51,7 @@ class Module:
         module_id += 1
         self.module_name = settings['name']
         if 'push' in settings:
+            self.private_token = uuid.uuid4().hex
             self.contents = []
             self.push_method = settings['push']
             if "expiration" in settings:
@@ -64,13 +67,13 @@ class Module:
                 req = None
             if req is not None and req.status_code == 200:
                 return req.content
+            utils.remove_module(self.module_id)
         elif len(self.contents) > 0:
             content = self.contents[-1]
             if not content.is_expired():
                 return self.contents[-1].raw_content
             else:
                 return "<html>Content has expired</html>"
-        utils.remove_module(self.module_id)
         return "<html>Error!</html>"
 
     def cache_content(self, content):

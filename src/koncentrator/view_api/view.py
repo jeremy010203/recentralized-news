@@ -18,7 +18,7 @@ def info_koncentrator():
 
 @api.route('/module/<string:module_id>/content')
 def get_content(module_id):
-    module = utils.get_module(module_id)
+    module = utils.get_module(module_id=module_id)
     if module is not None:
         return module.get_content()
     else:
