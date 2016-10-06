@@ -1,7 +1,7 @@
 #! /bin/usr/python3
 
 from flask import Flask, request, render_template, jsonify
-import subprocess
+import requests
 import re, sys
 from random import random
 from bootstrapy import bootstrapy
@@ -11,7 +11,8 @@ app = Flask(__name__)
 
 @app.route('/test')
 def test():
-    modules = json.loads(subprocess.check_output(["curl", 'koncentrator:80/info/list/module']).decode('utf-8'))
+    modules = requests.get('http://koncentrator:80/module/list')
+    modules = modules.json()
     list_modules = []
     list_wells = []
     content_panel = ""
@@ -24,13 +25,14 @@ def test():
 
 @app.route('/module/list')
 def list_modules():
-    return subprocess.check_output(["curl", 'koncentrator:80/info/list/module']).decode('utf-8')
+    return requests.get('http://koncentrator:80/module/list').text
 
 @app.route('/get_from_module/<module>')
 def get_from_module(module):
-    out = subprocess.check_output(["curl", 'koncentrator:80/module/' + module + '/content']).decode('utf-8')
+    req = requests.get('http://koncentrator:80/module/{0}/content'.format(module))
+    out = req.json()
     print(out)
-    return out
+    return out['content']
 
 @app.route('/')
 def main():

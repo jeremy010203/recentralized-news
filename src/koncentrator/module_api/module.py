@@ -60,21 +60,20 @@ class Module:
                 self.expiration = 300
 
     def get_content(self):
-        if not self.push_method:
-            try:
-                req = requests.get("http://{0}:{1}/content".format(self.module_name, "80"))
-            except:
-                req = None
-            if req is not None and req.status_code == 200:
-                return req.content
-            utils.remove_module(self.module_id)
-        elif len(self.contents) > 0:
-            content = self.contents[-1]
-            if not content.is_expired():
-                return self.contents[-1].raw_content
-            else:
-                return "<html>Content has expired</html>"
-        return "<html>Error!</html>"
+        answer = {}
+        if self.push_method:
+            if len(self.contents) > 0:
+                content = self.contents[-1]
+                if not content.is_expired():
+                    return content.raw_content, True
+        try:
+            req = requests.get("http://{0}:{1}/content".format(self.module_name, "80"))
+        except:
+            req = None
+        if req is not None and req.status_code == 200:
+            return req.text, True
+        utils.remove_module(self.module_id)
+        return "Module disconnected", False
 
     def cache_content(self, content):
         self.contents.append(content)
