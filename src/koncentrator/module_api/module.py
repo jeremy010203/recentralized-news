@@ -14,6 +14,9 @@ def register_module():
     dict = request.json
     current_app.logger.debug(request.json)
     current_app.logger.debug("Got connection from: %s", dict['name'])
+    if utils.name_is_taken(dict['name']):
+        dict['success'] = False
+        return jsonify(dict), 403
     module = Module(dict)
     utils.add_module(module)
     answer = {}
