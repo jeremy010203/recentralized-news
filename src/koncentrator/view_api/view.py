@@ -1,5 +1,6 @@
 from flask import jsonify, Blueprint
 from utils import utils
+import uuid
 
 api = Blueprint('api', __name__)
 
@@ -28,3 +29,17 @@ def get_content(module_id):
         answer['success'] = False
         answer['error'] = "This id does not refer any module"
         return jsonify(answer), 404
+
+@api.route('/view/register')
+def register_view():
+    view = View()
+    answer = {}
+    answer['id'] = view.id
+    return jsonify(answer)
+
+class View:
+    id = None
+
+    def __init__(self, name):
+        self.name = name
+        self.id = uuid.uuid4().hex
