@@ -19,6 +19,13 @@ def get_module(module_id=None, token=None):
                 return modules[id]
     return None
 
+def name_is_taken(module_name):
+    global modules
+    for module_id in modules:
+        if modules[module_id].module_name == module_name:
+            return True
+    return False
+
 def remove_module(module_id):
     global modules
     if module_id in modules:
