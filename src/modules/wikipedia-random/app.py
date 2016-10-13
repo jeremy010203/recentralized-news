@@ -22,6 +22,8 @@ def loop():
 if __name__ == '__main__':
     out = requests.post('http://koncentrator:80/module/register',
             json={"name":"wikipedia-random","push":True,"expiration":1000})
+    if out.status_code != 200:
+        exit(1)
     dict = out.json()
     print(dict)
     thread = threading.Thread(target=loop, daemon=True)
