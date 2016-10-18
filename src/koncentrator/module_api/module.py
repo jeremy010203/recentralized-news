@@ -60,6 +60,11 @@ class Module:
             else:
                 self.expiration = 300
 
+    def get_last_content(self):
+        if self.push_method and len(self.contents) > 0:
+            return self.contents[-1]
+        return None
+
     def get_content(self):
         answer = {}
         if self.push_method:
