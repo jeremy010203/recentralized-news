@@ -14,9 +14,13 @@ def register_module():
     dict = request.json
     current_app.logger.debug(request.json)
     current_app.logger.debug("Got connection from: %s", dict['name'])
-    if utils.name_is_taken(dict['name']):
-        dict['success'] = False
-        return jsonify(dict), 403
+    module = utils.get_module_by_name(dict['name'])
+    if module is not None:
+        if not module.ping():
+            utils.remove_module(module.module_id)
+        else:
+            dict['success'] = False
+            return jsonify(dict), 403
     module = Module(dict)
     utils.add_module(module)
     answer = {}
@@ -32,7 +36,6 @@ def register_content(token):
     module = utils.get_module(token=token)
     answer = {}
     if module is not None:
-        current_app.logger.debug("Got content for module '%s':\n%s", module.module_id, request.json)
         ct = content.Content(module.expiration, dict['content'])
         module.cache_content(ct)
         answer['success'] = True
@@ -80,3 +83,11 @@ class Module:
 
     def cache_content(self, content):
         self.contents.append(content)
+
+    def ping(self):
+        print("Pinging: {0}:{1}...".format(self.module_name, "80"))
+        try:
+            req = requests.get("http://{0}:{1}/isAlive".format(self.module_name, "80"))
+            return True
+        except:
+            return False
