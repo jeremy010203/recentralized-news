@@ -15,8 +15,8 @@ def main():
 def loop():
     while True:
         mod_id = dict['token']
-        url = "http://koncentrator:80/module/" + mod_id + "/content"
-        out = requests.post(url, json={"content":"{0}".format(wiki.get_random_page())})
+        url = "http://koncentrator:80/module/content"
+        out = requests.post(url, json={"token":mod_id, "content":wiki.get_random_page()})
         time.sleep(600)
 
 if __name__ == '__main__':
