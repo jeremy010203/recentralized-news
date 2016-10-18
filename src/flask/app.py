@@ -8,6 +8,7 @@ from bootstrapy import bootstrapy
 import json
 
 app = Flask(__name__)
+id_view = ""
 
 @app.route('/test')
 def test():
@@ -39,4 +40,6 @@ def main():
     return render_template("main.html", content=well_4x4, modules=[ping_module, random_module])
 
 if __name__ == '__main__':
+    global id_view
+    id_view = requests.get('http://koncentrator:80/view/register')
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
