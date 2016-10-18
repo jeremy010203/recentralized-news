@@ -23,9 +23,10 @@ def register_module():
         answer['token'] = module.private_token
     return jsonify(answer)
 
-@api.route('/module/<string:token>/content', methods=['POST'])
-def register_content(token):
+@api.route('/module/content', methods=['POST'])
+def register_content():
     dict = request.json
+    token = dict['token']
     module = utils.get_module(token=token)
     answer = {}
     if module is not None:
