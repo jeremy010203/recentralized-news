@@ -34,12 +34,14 @@ def get_content(module_id):
 def register_view():
     view = View()
     answer = {}
-    answer['id'] = view.id
+    answer['token'] = view.token
+    utils.add_view(view)
     return jsonify(answer)
 
 class View:
-    id = None
+    token = None
+    polled = None
 
-    def __init__(self, name):
-        self.name = name
-        self.id = uuid.uuid4().hex
+    def __init__(self):
+        self.token = uuid.uuid4().hex
+        self.polled = {}

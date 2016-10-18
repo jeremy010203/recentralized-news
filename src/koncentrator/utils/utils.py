@@ -29,7 +29,7 @@ def remove_module(module_id):
 
 def add_view(view):
     global views
-    views[view.id] = view
+    views[view.token] = view
 
 def get_views():
     global views
