@@ -8,7 +8,7 @@ from bootstrapy import bootstrapy
 import json
 
 app = Flask(__name__)
-id_view = ""
+id_view = {}
 
 @app.route('/test')
 def test():
@@ -41,5 +41,5 @@ def main():
 
 if __name__ == '__main__':
     global id_view
-    id_view = requests.get('http://koncentrator:80/view/register')
+    id_view = requests.get('http://koncentrator:80/view/register').json()
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
